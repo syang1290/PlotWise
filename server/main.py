@@ -13,8 +13,7 @@ app = FastAPI(title="PlotWise AI Engine")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173",
-                   "https://plotwise.vercel.app",
-                   "*"],
+                   "https://plotwise.vercel.app",],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -45,6 +44,13 @@ async def analyze_property(query: PropertyQuery):
     - "last_updated": current date
     - "summary": a 2-sentence summary
     - "suggested_actions": a list of 3 strings
+    
+    # --- ADD THESE NEW KEYS ---
+    - "estimated_value": "e.g. $1,250,000"
+    - "lot_size": "e.g. 6,500 sq ft"
+    - "year_built": "e.g. 1958"
+    - "last_sale": "e.g. $850,000 (2018)"
+    # --------------------------
     
     - "zoning_details": {
         "max_height": "e.g. 35 ft",
