@@ -6,6 +6,10 @@ import { toPng } from 'html-to-image';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
+const API_BASE_URL = import.meta.env.PROD 
+  ? 'https://plotwise.onrender.com'
+  : 'http://localhost:8000';
+
 function App() {
   const [activeAnalysis, setActiveAnalysis] = useState('Overview');
   const [searchQuery, setSearchQuery] = useState('');
@@ -33,7 +37,7 @@ function App() {
         const [lng, lat] = geoData.features[0].center;
         setCoordinates({ longitude: lng, latitude: lat });
       }
-      const res = await fetch('http://localhost:8000/api/analyze', {
+      const res = await fetch(`${API_BASE_URL}/api/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address: searchQuery }),
