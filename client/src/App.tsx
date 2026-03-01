@@ -14,6 +14,7 @@ import {
 import MapView from './components/MapView';
 import jsPDF from 'jspdf';
 import { toPng } from 'html-to-image';
+
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const API_BASE_URL = import.meta.env.PROD 
@@ -79,7 +80,7 @@ const handleActionClick = async (action: string) => {
     setChatAnswer(''); 
     setShowChat(true); 
     try {
-      const res = await fetch('http://localhost:8000/api/chat', {
+      const res = await fetch(`${API_BASE_URL}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
