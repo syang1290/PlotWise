@@ -1,5 +1,16 @@
-import React, { useState } from 'react';
-import { MapPin, Search, Accessibility, ChevronRight, Clock, Scale, Sparkles, ShieldCheck, X, Home, Users, Loader2, MessageSquare, Send, Download, FileText, Info } from 'lucide-react';
+import { useState } from 'react';
+import { 
+  MapPin, 
+  Search, 
+  ChevronRight, 
+  Sparkles, 
+  ShieldCheck, 
+  X, 
+  Loader2, 
+  Send, 
+  Download, 
+  FileText 
+} from 'lucide-react'; 
 import MapView from './components/MapView';
 import jsPDF from 'jspdf';
 import { toPng } from 'html-to-image';
@@ -49,12 +60,12 @@ function App() {
     } catch (e) { console.error(e); } finally { setIsLoading(false); }
   };
 
-  const handleActionClick = async (action: string) => {
+const handleActionClick = async (action: string) => {
     setSelectedAction(action);
     setIsActionLoading(true);
     setActionDetails(null);
     try {
-      const response = await fetch('http://localhost:8000/api/action-details', {
+      const response = await fetch(`${API_BASE_URL}/api/action-details`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ address: propertyData.address, action: action }),
