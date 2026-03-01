@@ -1,9 +1,19 @@
 import { useState } from 'react';
-import { MapPin, Search, ChevronRight, Sparkles, ShieldCheck, X, Loader2, Send, Download, FileText } from 'lucide-react';
+import { 
+  MapPin, 
+  Search, 
+  ChevronRight, 
+  Sparkles, 
+  ShieldCheck, 
+  X, 
+  Loader2, 
+  Send, 
+  Download, 
+  FileText 
+} from 'lucide-react';
 import MapView from './components/MapView';
 import jsPDF from 'jspdf';
 import { toPng } from 'html-to-image';
-
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
 const API_BASE_URL = import.meta.env.PROD 
