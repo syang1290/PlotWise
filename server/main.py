@@ -9,7 +9,6 @@ from openai import OpenAI
 load_dotenv()
 
 app = FastAPI(title="PlotWise AI Engine")
-MODEL_NAME = "gpt-5-mini"
 
 app.add_middleware(
     CORSMiddleware,
@@ -36,10 +35,8 @@ def read_root():
 @app.post("/api/analyze")
 async def analyze_property(query: PropertyQuery):
     system_prompt = """
-    "You are an expert real estate, zoning, and municipal code AI assistant.
-
+    You are an expert real estate, zoning, and municipal code AI assistant.
     Analyze the provided address and return a JSON object with the following exact keys:
-    - "internal_reasoning": "A brief explanation of the jurisdiction-specific logic used for these calculations"
     - "address": the original address string
     - "inclusivity_score": an integer 0-100
     - "development_potential": "High", "Medium", or "Low"
@@ -49,12 +46,10 @@ async def analyze_property(query: PropertyQuery):
     - "suggested_actions": a list of 3 strings
     
     # --- ADD THESE NEW KEYS ---
-    For these values, use realistic examples that you found on the web (redfine, zillow, etc)
     - "estimated_value": "e.g. $1,250,000"
     - "lot_size": "e.g. 6,500 sq ft"
     - "year_built": "e.g. 1958"
     - "last_sale": "e.g. $850,000 (2018)"
-
     # --------------------------
     
     - "zoning_details": {
@@ -76,11 +71,11 @@ async def analyze_property(query: PropertyQuery):
     """
 
     response = client.chat.completions.create(
-        model=MODEL_NAME,
+        model="gpt-4o-mini",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": f"Identify the municipal jurisdiction and analyze this property: {query.address}"}
+            {"role": "user", "content": f"Analyze this property: {query.address}"}
         ]
     )
 
@@ -97,7 +92,7 @@ async def get_action_details(query: ActionQuery):
     """
 
     response = client.chat.completions.create(
-        model=MODEL_NAME,
+        model="gpt-4o-mini",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": system_prompt},
@@ -123,7 +118,7 @@ async def chat_with_property(query: ChatQuery):
     """
 
     response = client.chat.completions.create(
-        model=MODEL_NAME,
+        model="gpt-4o-mini",
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": system_prompt},
