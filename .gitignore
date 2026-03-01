@@ -1,0 +1,19 @@
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Frontend
+client/node_modules/
+client/dist/
+client/.env
+client/*.local
+
+# Backend
+server/.env
+server/venv/
+server/__pycache__/
+server/*.py[cod]
+server/.pytest_cache/
+
+# Root Level Junk
+node_modules/

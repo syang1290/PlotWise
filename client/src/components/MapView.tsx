@@ -1,32 +1,90 @@
-import React, { useState } from 'react';
-// @ts-ignore
-import Map from 'react-map-gl';
+import React, { useEffect, useRef } from 'react';
+import Map, { Marker, Layer, Source, type MapRef } from 'react-map-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
 
-export default function MapView() {
-  const [viewState, setViewState] = useState({
-    longitude: -117.8265, 
-    latitude: 33.6846,    
-    zoom: 13.5            
-  });
+interface MapViewProps {
+  coordinates?: { longitude: number; latitude: number } | null;
+}
 
-  if (!MAPBOX_TOKEN) {
-    return (
-      <div className="flex h-full w-full items-center justify-center bg-red-50 text-red-500 font-medium">
-        Error: Missing Mapbox Token. Check your .env file.
-      </div>
-    );
-  }
+export default function MapView({ coordinates }: MapViewProps) {
+  const mapRef = useRef<MapRef>(null);
+
+  useEffect(() => {
+    if (coordinates && mapRef.current) {
+      mapRef.current.flyTo({
+        center: [coordinates.longitude, coordinates.latitude],
+        zoom: 18,
+        pitch: 60,
+        bearing: -20,
+        duration: 3000,
+        essential: true
+      });
+    }
+  }, [coordinates]);
 
   return (
     <Map
-      {...viewState}
-      onMove={(evt: any) => setViewState(evt.viewState)}
-      mapStyle="mapbox://styles/mapbox/light-v11" 
+      ref={mapRef}
+      preserveDrawingBuffer={true}
+      initialViewState={{
+        longitude: -117.8228,
+        latitude: 33.6846,
+        zoom: 12,
+        pitch: 0
+      }}
+      mapStyle="mapbox://styles/mapbox/light-v11"
       mapboxAccessToken={MAPBOX_TOKEN}
-      style={{ width: '100%', height: '100%' }}
-    />
+      antialias={true}
+    >
+      <Layer
+        id="3d-buildings"
+        source="composite"
+        source-layer="building"
+        filter={['==', 'extrude', 'true']}
+        type="fill-extrusion"
+        paint={{
+          'fill-extrusion-color': '#aaa',
+          'fill-extrusion-height': ['get', 'height'],
+          'fill-extrusion-base': ['get', 'min_height'],
+          'fill-extrusion-opacity': 0.6
+        }}
+      />
+
+      {coordinates && (
+        <>
+          <Source
+            id="parcel-data"
+            type="geojson"
+            data={{
+              type: 'Feature',
+              geometry: {
+                type: 'Point',
+                coordinates: [coordinates.longitude, coordinates.latitude]
+              },
+              properties: {}
+            }}
+          >
+            <Layer
+              id="parcel-highlight"
+              type="circle"
+              paint={{
+                'circle-radius': 100,
+                'circle-color': '#4b3e99',
+                'circle-opacity': 0.1,
+                'circle-stroke-width': 2,
+                'circle-stroke-color': '#4b3e99'
+              }}
+            />
+          </Source>
+          <Marker 
+            longitude={coordinates.longitude} 
+            latitude={coordinates.latitude} 
+            color="#4b3e99" 
+          />
+        </>
+      )}
+    </Map>
   );
 }
